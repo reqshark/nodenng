@@ -1,23 +1,25 @@
 {
-  "name":             "nodenng",
-  "version":          "0.0.2",
-  "description":      "bindings to nng",
-  "dependencies":     {
-    "nan":              "2"
+  "name": "nodenng",
+  "version": "0.0.2",
+  "description": "bindings to nng",
+  "dependencies": {
+    "cmake-js": "^5.1.0",
+    "nan": "^2.12.1"
   },
-  "devDependencies":  {
-    "tape":             "3.5",
-    "tap-spec":         "2.2"
+  "devDependencies": {
+    "tape": "3.5",
+    "tap-spec": "2.2"
   },
-  "repository":       {
-    "type":             "git",
-    "url":              "git://github.com/reqshark/nodenng"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/reqshark/nodenng"
   },
-  "scripts":          {
-    "test":             "node test | tap-spec"
+  "scripts": {
+    "test": "node test | tap-spec",
+    "install": "cmake-js compile"
   },
-  "homepage":         "http://github.com/reqhsark/nodenng",
-  "keywords":         [
+  "homepage": "http://github.com/reqhsark/nodenng",
+  "keywords": [
     "nanomsg",
     "nng",
     "nodenng",
@@ -28,12 +30,14 @@
     "native",
     "binding",
     "addon",
-    "concurrency"
+    "concurrency",
+    "nanomsgnng",
+    "high performance scalability protocol"
   ],
-  "author":           {
-    "name":             "Bent Cardan",
-    "email":            "bent@nothingsatisfies.com",
-    "url":              "http://req.link"
+  "author": {
+    "name": "Bent Cardan",
+    "email": "bent@nothingsatisfies.com",
+    "url": "http://req.link"
   },
   "license": "MIT"
 }
