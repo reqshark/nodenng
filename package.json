@@ -1,0 +1,37 @@
+{
+  "name": "nng",
+  "version": "0.0.1",
+  "description": "bindings to nng",
+  "dependencies": {
+    "nan": "2"
+  },
+  "devDependencies": {
+    "tape": "3.5",
+    "tap-spec": "2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/reqshark/nodenng"
+  },
+  "scripts": {
+    "test": "node test | tap-spec"
+  },
+  "homepage": "http://github.com/reqhsark/nodenng",
+  "keywords": [
+    "nanomsg",
+    "nng",
+    "nodenng",
+    "nngnode",
+    "node-nng",
+    "nng-node",
+    "nngjs",
+    "native",
+    "binding",
+    "addon",
+    "concurrency"
+  ],
+  "author": {
+    "name": "Bent Cardan"
+  },
+  "license": "MIT"
+}
