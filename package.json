@@ -1,23 +1,23 @@
 {
-  "name": "nng",
-  "version": "0.0.1",
-  "description": "bindings to nng",
-  "dependencies": {
-    "nan": "2"
+  "name":             "nodenng",
+  "version":          "0.0.2",
+  "description":      "bindings to nng",
+  "dependencies":     {
+    "nan":              "2"
   },
-  "devDependencies": {
-    "tape": "3.5",
-    "tap-spec": "2.2"
+  "devDependencies":  {
+    "tape":             "3.5",
+    "tap-spec":         "2.2"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/reqshark/nodenng"
+  "repository":       {
+    "type":             "git",
+    "url":              "git://github.com/reqshark/nodenng"
   },
-  "scripts": {
-    "test": "node test | tap-spec"
+  "scripts":          {
+    "test":             "node test | tap-spec"
   },
-  "homepage": "http://github.com/reqhsark/nodenng",
-  "keywords": [
+  "homepage":         "http://github.com/reqhsark/nodenng",
+  "keywords":         [
     "nanomsg",
     "nng",
     "nodenng",
@@ -30,8 +30,10 @@
     "addon",
     "concurrency"
   ],
-  "author": {
-    "name": "Bent Cardan"
+  "author":           {
+    "name":             "Bent Cardan",
+    "email":            "bent@nothingsatisfies.com",
+    "url":              "http://req.link"
   },
   "license": "MIT"
 }
