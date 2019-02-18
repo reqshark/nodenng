@@ -1,12 +1,10 @@
-
-{
-  "targets": [
+{'targets': [
     {
-      "target_name": "nodenng",
-      "sources": [
-        "nodenng.cc"
-      ],
-      "include_dirs": ["<!(node -e \"require('nan')\")"]
+        'target_name': 'nodenng',
+        'libraries': [ '../nng/build/libnng.a' ],
+        'include_dirs': [
+            "<!(node -e \"require('nan')\")",
+        ],
+        'sources': [ 'binding.cc' ],
     }
-  ]
-}
+]}

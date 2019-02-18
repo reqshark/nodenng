@@ -1,7 +1,11 @@
-module.exports  = nng
+const nng = require('..')
 
-function nng(t){
+module.exports  = nngt
+
+function nngt(t){
   t.plan(1)
+
+  nng.test()
 
   t.ok ( 'nngjs', 'or nodenng')
 }

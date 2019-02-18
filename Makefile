@@ -17,4 +17,4 @@ test:
 	npm t
 
 clean:
-	rm -fr package-* node_modules
+	rm -fr package-* node_modules build

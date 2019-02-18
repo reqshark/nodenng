@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "description": "bindings to nng",
   "dependencies": {
-    "nan": "2.12",
+    "nan": "^2.12.1"
   },
   "devDependencies": {
     "tape": "3.5",
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "node test | tap-spec",
-    "install": "./compile"
+    "install": "./compile && node-gyp rebuild"
   },
   "homepage": "http://github.com/reqhsark/nodenng",
   "keywords": [
