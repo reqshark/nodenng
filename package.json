@@ -1,13 +1,13 @@
 {
   "name": "nodenng",
-  "version": "0.0.7",
+  "version": "0.0.8 ",
   "description": "bindings to nng",
   "dependencies": {
-    "nan": "^2.12.1"
+    "nan": "2"
   },
   "devDependencies": {
-    "tape": "3.5",
-    "tap-spec": "2.2"
+    "tap-spec": "2.2",
+    "tape": "4.10"
   },
   "repository": {
     "type": "git",
