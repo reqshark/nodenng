@@ -3,4 +3,6 @@ node_modules
 npm-debug.log
 package-*
 .DS_Store
+deps
+nng
 v8

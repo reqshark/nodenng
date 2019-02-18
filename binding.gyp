@@ -1,9 +1,10 @@
 {'targets': [
     {
         'target_name': 'nodenng',
-        'libraries': [ '../nngclone/build/libnng.a' ],
+        'libraries': [ '../deps/lib/libnng.a' ],
         'include_dirs': [
             "<!(node -e \"require('nan')\")",
+            "deps/include"
         ],
         'sources': [ 'binding.cc' ],
     }
