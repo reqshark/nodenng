@@ -1,4 +1,6 @@
+build
 node_modules
+npm-debug.log
 package-*
 .DS_Store
-build
+v8

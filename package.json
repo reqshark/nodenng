@@ -3,8 +3,7 @@
   "version": "0.0.2",
   "description": "bindings to nng",
   "dependencies": {
-    "cmake-js": "^5.1.0",
-    "nan": "^2.12.1"
+    "nan": "2.12",
   },
   "devDependencies": {
     "tape": "3.5",
@@ -16,11 +15,10 @@
   },
   "scripts": {
     "test": "node test | tap-spec",
-    "install": "cmake-js compile"
+    "install": "./compile"
   },
   "homepage": "http://github.com/reqhsark/nodenng",
   "keywords": [
-    "nanomsg",
     "nng",
     "nodenng",
     "nngnode",
@@ -31,7 +29,6 @@
     "binding",
     "addon",
     "concurrency",
-    "nanomsgnng",
     "high performance scalability protocol"
   ],
   "author": {

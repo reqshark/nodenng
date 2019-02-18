@@ -2,9 +2,9 @@
 {
   "targets": [
     {
-      "target_name": "addon",
+      "target_name": "nodenng",
       "sources": [
-        "sync.cc"
+        "nodenng.cc"
       ],
       "include_dirs": ["<!(node -e \"require('nan')\")"]
     }
