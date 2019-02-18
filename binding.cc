@@ -145,11 +145,11 @@ client(const char *url)
 }
 
 NAN_METHOD(client){
-  client("tcp://127.0.0.1:5555");
+  client("tcp://127.0.0.1:40090");
 }
 
 NAN_METHOD(server){
-  server("tcp://127.0.0.1:5555");
+  server("tcp://127.0.0.1:40090");
 }
 
 NAN_METHOD(test){

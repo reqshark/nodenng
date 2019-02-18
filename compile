@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ ! -d nng ]; then
   rm -rf deps nng build && mkdir deps
-  git clone --depth 1 https://github.com/nanomsg/nng && cd nng
+  git clone https://github.com/nanomsg/nng && cd nng
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_MESSAGE=NEVER -DCMAKE_INSTALL_PREFIX=$(pwd)/../../deps .. -DNNG_TESTS=OFF -DNNG_TOOLS=OFF -DNNG_ENABLE_NNGCAT=OFF -DNNG_ENABLE_COVERAGE=OFF
+  cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_INSTALL_MESSAGE=NEVER -DCMAKE_INSTALL_PREFIX=$(pwd)/../../deps .. -DNNG_TESTS=OFF -DNNG_TOOLS=OFF -DNNG_ENABLE_NNGCAT=OFF -DNNG_ENABLE_COVERAGE=OFF
   make MACOSX_DEPLOYMENT_TARGET=10.7 all install
 fi

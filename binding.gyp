@@ -2,17 +2,11 @@
     {
         'target_name': 'nodenng',
         'conditions': [
-            ['OS=="linux"', {
-                'cflags': [ '-fPIC' ],
-            }],
-#            ['OS=="mac"', {
-#                'xcode_settings': {
-#                    'OTHER_CFLAGS': [ '-std=c++11' ],
-#                },
+#            ['OS=="linux"', {
+#                'cflags': [ '-fPIC' ],
 #            }],
         ],
-
-        'libraries': [ '../deps/lib/libnng.a' ],
+        'libraries': [ '../deps/lib/libnng.dylib' ],
         'include_dirs': [
             "<!(node -e \"require('nan')\")",
             "deps/include"
