@@ -1,7 +1,7 @@
 {'targets': [
     {
         'target_name': 'nodenng',
-        'libraries': [ '../nng/build/libnng.a' ],
+        'libraries': [ '../nngclone/build/libnng.a' ],
         'include_dirs': [
             "<!(node -e \"require('nan')\")",
         ],

@@ -1,6 +1,6 @@
 #!/bin/bash
-git submodule update --init
-cd nng
+git clone --depth 1 https://github.com/nanomsg/nng nngclone
+cd nngclone
 rm -rf build && mkdir build && cd build
 cmake .. -DNNG_TESTS=OFF -DNNG_TOOLS=OFF -DNNG_ENABLE_NNGCAT=OFF -DNNG_ENABLE_COVERAGE=OFF
 make
