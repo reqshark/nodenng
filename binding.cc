@@ -73,72 +73,72 @@ using Nan::To;
 //}
 
 NAN_METHOD(bus_open) {
-	nng_socket s;
-	nng_bus0_open(&s); //nng_bus0_open_raw
+  nng_socket s;
+  nng_bus0_open(&s); //nng_bus0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(pair0_open) {
-	nng_socket s;
-	nng_pair0_open(&s); //nng_pair0_open_raw
+  nng_socket s;
+  nng_pair0_open(&s); //nng_pair0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 //NNG_OPT_PAIR1_POLY
 //NNG_OPT_MAXTTL
 NAN_METHOD(pair1_open) {
-	nng_socket s;
-	nng_pair1_open(&s); //nng_pair1_open_raw
+  nng_socket s;
+  nng_pair1_open(&s); //nng_pair1_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 
 
 NAN_METHOD(pub_open) {
-	nng_socket s;
-	nng_pub0_open(&s); //nng_pub0_open_raw
+  nng_socket s;
+  nng_pub0_open(&s); //nng_pub0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(pull_open) {
-	nng_socket s;
-	nng_pull0_open(&s); //nng_pull0_open_raw
+  nng_socket s;
+  nng_pull0_open(&s); //nng_pull0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(push_open) {
-	nng_socket s;
-	nng_push0_open(&s); //nng_push0_open_raw
+  nng_socket s;
+  nng_push0_open(&s); //nng_push0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(rep_open) {
-	nng_socket s;
-	nng_rep0_open(&s); //nng_rep0_open_raw
+  nng_socket s;
+  nng_rep0_open(&s); //nng_rep0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(req_open) {
-	nng_socket s;
-	nng_req0_open(&s); //nng_req0_open_raw
+  nng_socket s;
+  nng_req0_open(&s); //nng_req0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(respondent_open) {
-	nng_socket s;
-	nng_respondent0_open(&s); //nng_respondent0_open_raw
+  nng_socket s;
+  nng_respondent0_open(&s); //nng_respondent0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(sub_open) {
-	nng_socket s;
-	nng_sub0_open(&s); //nng_sub0_open_raw
+  nng_socket s;
+  nng_sub0_open(&s); //nng_sub0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
 NAN_METHOD(surveyor_open) {
-	nng_socket s;
-	nng_surveyor0_open(&s); // nng_surveyor0_open_raw
+  nng_socket s;
+  nng_surveyor0_open(&s); // nng_surveyor0_open_raw
   info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
 }
 
@@ -156,17 +156,17 @@ NAN_METHOD(test){
 
 NAN_MODULE_INIT(Init) {
   HandleScope scope;
-	EXPORT_METHOD(target, bus_open);
-	EXPORT_METHOD(target, pair0_open);
-	EXPORT_METHOD(target, pair1_open);
-	EXPORT_METHOD(target, pub_open);
-	EXPORT_METHOD(target, pull_open);
-	EXPORT_METHOD(target, push_open);
-	EXPORT_METHOD(target, rep_open);
-	EXPORT_METHOD(target, req_open);
-	EXPORT_METHOD(target, respondent_open);
-	EXPORT_METHOD(target, sub_open);
-	EXPORT_METHOD(target, surveyor_open);
+  EXPORT_METHOD(target, bus_open);
+  EXPORT_METHOD(target, pair0_open);
+  EXPORT_METHOD(target, pair1_open);
+  EXPORT_METHOD(target, pub_open);
+  EXPORT_METHOD(target, pull_open);
+  EXPORT_METHOD(target, push_open);
+  EXPORT_METHOD(target, rep_open);
+  EXPORT_METHOD(target, req_open);
+  EXPORT_METHOD(target, respondent_open);
+  EXPORT_METHOD(target, sub_open);
+  EXPORT_METHOD(target, surveyor_open);
 
   /* debug */
   EXPORT_METHOD(target, test);

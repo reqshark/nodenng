@@ -1,0 +1,16 @@
+sudo: false
+
+language: c
+
+os:
+  - osx
+  - linux
+
+install:
+  - npm i
+
+script:
+  - npm t
+
+notifications:
+  email: false
