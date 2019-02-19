@@ -1,5 +1,3 @@
-const nng = require('..')
-
 module.exports  = open
 
 function open(t){
@@ -17,7 +15,7 @@ function open(t){
     respondent_open,
     sub_open,
     surveyor_open,
-  } = nng
+  } = require('..')
 
   t.ok ( Buffer.isBuffer(bus_open()), 'open bus sock is a node buffer')
   t.ok ( Buffer.isBuffer(pair0_open()), 'open pair0 sock is a node buffer')

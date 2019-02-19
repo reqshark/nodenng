@@ -1,5 +1,4 @@
-# nodenng
-[![CircleCI](https://circleci.com/gh/reqshark/nodenng/tree/master.svg?style=svg)](https://circleci.com/gh/reqshark/nodenng/tree/master)
+# nodenng [![CircleCI](https://circleci.com/gh/reqshark/nodenng/tree/master.svg?style=svg)](https://circleci.com/gh/reqshark/nodenng/tree/master)
 
 bindings to nng (nanomsg next generation)
 
@@ -39,4 +38,4 @@ see [`test` directory](test)
 
 MIT
 
-<sub>*currently tested on linux and osx but very shortly full windows support*</sub>
+<sub>*currently tested on linux and osx but shortly doing windows support*</sub>

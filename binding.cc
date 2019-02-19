@@ -73,73 +73,132 @@ using Nan::To;
 //}
 
 NAN_METHOD(bus_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_bus0_open(&s); //nng_bus0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(pair0_open) {
+	size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_pair0_open(&s); //nng_pair0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 //NNG_OPT_PAIR1_POLY
 //NNG_OPT_MAXTTL
 NAN_METHOD(pair1_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_pair1_open(&s); //nng_pair1_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 
 
 NAN_METHOD(pub_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_pub0_open(&s); //nng_pub0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(pull_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_pull0_open(&s); //nng_pull0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(push_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_push0_open(&s); //nng_push0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(rep_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_rep0_open(&s); //nng_rep0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(req_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_req0_open(&s); //nng_req0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(respondent_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_respondent0_open(&s); //nng_respondent0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(sub_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_sub0_open(&s); //nng_sub0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
 }
 
 NAN_METHOD(surveyor_open) {
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_surveyor0_open(&s); // nng_surveyor0_open_raw
-  info.GetReturnValue().Set(WrapPointer(&s, sizeof(nng_socket)));
+
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
+  memcpy(node::Buffer::Data(sock), &s, sz);
+  info.GetReturnValue().Set(sock);
+}
+
+//int nng_listen(nng_socket s, const char *url, nng_listener *lp, int flags);
+NAN_METHOD(listen) {
+  Nan::Utf8String url(info[1]);
+  int ret = nng_listen(*UnwrapPointer<nng_socket*>(info[0]), *url, NULL, 0);
+  if (ret == 0) {
+    info
+      .GetReturnValue()
+      .Set(New<Number>(ret));
+  } else {
+    info
+      .GetReturnValue()
+      .Set(New<String>(nng_strerror(ret)).ToLocalChecked());
+  }
 }
 
 NAN_METHOD(test){
@@ -156,6 +215,8 @@ NAN_METHOD(test){
 
 NAN_MODULE_INIT(Init) {
   HandleScope scope;
+
+	/* open */
   EXPORT_METHOD(target, bus_open);
   EXPORT_METHOD(target, pair0_open);
   EXPORT_METHOD(target, pair1_open);
@@ -167,6 +228,9 @@ NAN_MODULE_INIT(Init) {
   EXPORT_METHOD(target, respondent_open);
   EXPORT_METHOD(target, sub_open);
   EXPORT_METHOD(target, surveyor_open);
+
+	/* listen and dial */
+	EXPORT_METHOD(target, listen);
 
   /* debug */
   EXPORT_METHOD(target, test);
