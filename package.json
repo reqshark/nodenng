@@ -1,6 +1,6 @@
 {
   "name": "nodenng",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "bindings to nng",
   "dependencies": {
     "nan": "2"
