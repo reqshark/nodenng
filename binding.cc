@@ -17,6 +17,7 @@
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
   IN THE SOFTWARE.
+
 */
 
 #include <nng/nng.h>
@@ -47,6 +48,7 @@ using v8::Local;
 
 using Nan::HandleScope;
 using Nan::MaybeLocal;
+using Nan::Utf8String;
 using Nan::NewBuffer;
 using Nan::Callback;
 using Nan::Maybe;
@@ -55,20 +57,20 @@ using Nan::New;
 using Nan::To;
 
 //NAN_METHOD(aiosock1){
-//	const char *addr = "inproc://aio";
-//	printf("aio test\n");
-//	nng_socket s1;
-//	nng_socket s2;
-//	nng_aio *  txaio;
-//	nng_aio *  rxaio;
-//	int        txdone = 0;
-//	int        rxdone = 0;
-//	nng_msg *  m;
-//	nng_pair1_open(&s1);
-//	nng_pair1_open(&s2);
-//	nng_listen(s1, addr, NULL, 0);
-//	nng_aio *saio;
-//	nng_aio_alloc(&saio, sleepdone, &end));
+//  const char *addr = "inproc://aio";
+//  printf("aio test\n");
+//  nng_socket s1;
+//  nng_socket s2;
+//  nng_aio *  txaio;
+//  nng_aio *  rxaio;
+//  int        txdone = 0;
+//  int        rxdone = 0;
+//  nng_msg *  m;
+//  nng_pair1_open(&s1);
+//  nng_pair1_open(&s2);
+//  nng_listen(s1, addr, NULL, 0);
+//  nng_aio *saio;
+//  nng_aio_alloc(&saio, sleepdone, &end));
 //  return;
 //}
 
@@ -83,7 +85,7 @@ NAN_METHOD(bus_open) {
 }
 
 NAN_METHOD(pair0_open) {
-	size_t sz = sizeof (nng_socket);
+  size_t sz = sizeof (nng_socket);
   nng_socket s;
   nng_pair0_open(&s); //nng_pair0_open_raw
 
@@ -103,8 +105,6 @@ NAN_METHOD(pair1_open) {
   memcpy(node::Buffer::Data(sock), &s, sz);
   info.GetReturnValue().Set(sock);
 }
-
-
 
 NAN_METHOD(pub_open) {
   size_t sz = sizeof (nng_socket);
@@ -188,16 +188,35 @@ NAN_METHOD(surveyor_open) {
 
 //int nng_listen(nng_socket s, const char *url, nng_listener *lp, int flags);
 NAN_METHOD(listen) {
-  Nan::Utf8String url(info[1]);
-  int ret = nng_listen(*UnwrapPointer<nng_socket*>(info[0]), *url, NULL, 0);
-  if (ret == 0) {
+  Utf8String url(info[1]);
+
+  // do we want to return the nng_listener??
+  // nanomsg.github.io/nng/man/tip/nng_listener.5
+  int l = nng_listen(*UnwrapPointer<nng_socket*>(info[0]), *url, NULL, 0);
+
+  if (l == 0) {
     info
       .GetReturnValue()
-      .Set(New<Number>(ret));
+      .Set(New<Number>(l)); // <-- good spot for nng_listener
   } else {
     info
       .GetReturnValue()
-      .Set(New<String>(nng_strerror(ret)).ToLocalChecked());
+      .Set(New<String>(nng_strerror(l)).ToLocalChecked());
+  }
+}
+
+//int nng_dial(nng_socket s, const char *url, nng_dialer *dp, int flags);
+NAN_METHOD(dial) {
+  Utf8String url(info[1]);
+
+  // do we want to return the nng_dialer?
+  //nanomsg.github.io/nng/man/tip/nng_dialer.5
+  int d = nng_dial(*UnwrapPointer<nng_socket*>(info[0]), *url, NULL, 0);
+
+  if (d == 0) {
+    info.GetReturnValue().Set(New<Number>(d)); // <-- good spot for nng_dialer
+  } else {
+    info.GetReturnValue().Set(New<String>(nng_strerror(d)).ToLocalChecked());
   }
 }
 
@@ -216,7 +235,7 @@ NAN_METHOD(test){
 NAN_MODULE_INIT(Init) {
   HandleScope scope;
 
-	/* open */
+  /* open */
   EXPORT_METHOD(target, bus_open);
   EXPORT_METHOD(target, pair0_open);
   EXPORT_METHOD(target, pair1_open);
@@ -229,8 +248,9 @@ NAN_MODULE_INIT(Init) {
   EXPORT_METHOD(target, sub_open);
   EXPORT_METHOD(target, surveyor_open);
 
-	/* listen and dial */
-	EXPORT_METHOD(target, listen);
+  /* listen and dial */
+  EXPORT_METHOD(target, listen);
+  EXPORT_METHOD(target, dial);
 
   /* debug */
   EXPORT_METHOD(target, test);
