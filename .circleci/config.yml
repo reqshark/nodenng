@@ -20,6 +20,8 @@ jobs:
           cmake
           libmbedtls-dev
           ninja-build
+          git
+          python
       - run: ./.circleci/build_deps
 
 workflows:
