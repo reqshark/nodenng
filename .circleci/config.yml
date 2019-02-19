@@ -1,31 +1,18 @@
 version: 2
 jobs:
-  "gcc - static":
+  install:
     docker:
-      - image: ubuntu:16.04
-        environment:
-          CC: gcc
-          CXX: g++
-          SHARED_LIBS: OFF
-          CTEST_OUTPUT_ON_FAILURE: 1
+      - image: circleci/node:10
+    working_directory: ~/repo
     steps:
       - checkout
-      - run: apt-get update -qq
-      - run: apt-get install -y software-properties-common
-      - run: add-apt-repository ppa:ubuntu-toolchain-r/test
-      - run: apt-get update -qq
-      - run: >
-          apt-get install -y --allow-unauthenticated
-          build-essential
-          cmake
-          libmbedtls-dev
-          ninja-build
-          git
-          python
-      - run: ./.circleci/build_deps
+      #- restore_cache:
+      - run: sudo apt install cmake build-essential libmbedtls-dev
+      - run: npm i
+      - run: npm t
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - "gcc - static"
+      - install

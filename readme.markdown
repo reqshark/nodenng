@@ -1,5 +1,5 @@
 # nodenng
-[![Build Status](https://travis-ci.org/reqshark/nodenng.svg?branch=master)](https://travis-ci.org/reqshark/nodenng)
+[![CircleCI](https://circleci.com/gh/reqshark/nodenng/tree/master.svg?style=svg)](https://circleci.com/gh/reqshark/nodenng/tree/master)
 
 bindings to nng (nanomsg next generation)
 
@@ -37,6 +37,6 @@ see [`test` directory](test)
 
 ## license
 
-MIT. &copy; 2019 Bent Cardan
+MIT
 
 <sub>*currently tested on linux and osx but very shortly full windows support*</sub>

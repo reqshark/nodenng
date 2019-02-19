@@ -1,4 +1,4 @@
-# build and test [![Build Status](https://travis-ci.org/reqshark/nodenng.svg?branch=master)](https://travis-ci.org/reqshark/nodenng)
+# build and test [![CircleCI](https://circleci.com/gh/reqshark/nodenng/tree/master.svg?style=svg)](https://circleci.com/gh/reqshark/nodenng/tree/master)
 
 `test/index.js` file runs the tests by iterating contents top-down within this
 directory.
