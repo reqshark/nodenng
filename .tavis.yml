@@ -2,11 +2,33 @@ sudo: false
 
 language: c
 
+dist: trusty
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
 os:
   - osx
   - linux
 
+env:
+  - n=7
+  - n=8
+  - n=9
+  - n=10
+  - n=11
+
+before_install:
+  - rm -rf ~/.nvm && git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - for i in {7..11}; do nvm i $i; done
+
 install:
+  - nvm use $n
   - npm i
 
 script:

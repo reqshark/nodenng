@@ -1,4 +1,5 @@
 # nodenng
+[![Build Status](https://travis-ci.org/reqshark/nodenng.svg?branch=master)](https://travis-ci.org/reqshark/nodenng)
 
 bindings to nng (nanomsg next generation)
 
