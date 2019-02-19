@@ -17,7 +17,7 @@
     "test": "node test | tap-spec",
     "install": "./compile && node-gyp rebuild"
   },
-  "homepage": "http://github.com/reqhsark/nodenng",
+  "homepage": "http://github.com/reqshark/nodenng",
   "keywords": [
     "nng",
     "nodenng",
