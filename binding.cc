@@ -56,24 +56,6 @@ using Nan::Set;
 using Nan::New;
 using Nan::To;
 
-//NAN_METHOD(aiosock1){
-//  const char *addr = "inproc://aio";
-//  printf("aio test\n");
-//  nng_socket s1;
-//  nng_socket s2;
-//  nng_aio *  txaio;
-//  nng_aio *  rxaio;
-//  int        txdone = 0;
-//  int        rxdone = 0;
-//  nng_msg *  m;
-//  nng_pair1_open(&s1);
-//  nng_pair1_open(&s2);
-//  nng_listen(s1, addr, NULL, 0);
-//  nng_aio *saio;
-//  nng_aio_alloc(&saio, sleepdone, &end));
-//  return;
-//}
-
 NAN_METHOD(bus_open) {
   size_t sz = sizeof (nng_socket);
   nng_socket s;
@@ -186,6 +168,25 @@ NAN_METHOD(surveyor_open) {
   info.GetReturnValue().Set(sock);
 }
 
+
+/**
+ * nanomsg.github.io/nng/man/tip/nng_close.3
+ * Closing the socket while data is in transmission will likely lead to loss of
+ * that data. There is no automatic linger or flush to ensure that the socket
+ * send buffers have completely transmitted. It is recommended to wait a brief
+ * period after calling nng_send() or similar functions, before calling this
+ * function.
+ */
+
+NAN_METHOD(close) {
+  int clsd = nng_close(*UnwrapPointer<nng_socket*>(info[0]));
+  if (clsd == 0) {
+    info.GetReturnValue().Set(New<Number>(clsd));
+  } else {
+    info.GetReturnValue().Set(New<String>(nng_strerror(clsd)).ToLocalChecked());
+  }
+}
+
 //int nng_listen(nng_socket s, const char *url, nng_listener *lp, int flags);
 NAN_METHOD(listen) {
   Utf8String url(info[1]);
@@ -247,6 +248,9 @@ NAN_MODULE_INIT(Init) {
   EXPORT_METHOD(target, respondent_open);
   EXPORT_METHOD(target, sub_open);
   EXPORT_METHOD(target, surveyor_open);
+
+  /* close */
+  EXPORT_METHOD(target, close);
 
   /* listen and dial */
   EXPORT_METHOD(target, listen);
