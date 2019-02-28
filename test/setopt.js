@@ -20,32 +20,24 @@
 
 */
 
-const bar = '===================='
-require ('tape')(`${bar} nng testsuite summary ${bar}`, function tests (t){
+module.exports  = nng_setopt
 
+function nng_setopt(t){
+  t.plan(3)
 
-  /**
-   * test naming convention:
-   * continguous characters matching filename (underscores are cool if needed)
-   * ex. `test('open')` --> runs a file called `open.js`
-   */
+  const {
+    NNG_OPT_SUB_SUBSCRIBE,
+    sub_open,
+    setopt,
+    close,
+  } = require('..')
 
-  test('open')
-  test('close')
-  test('listen')
-  test('dial')
-  test('setopt')
+  t.is(NNG_OPT_SUB_SUBSCRIBE, `sub:subscribe`, 'library symbol export succeeds')
 
+  const topic = '' /* subscription topic all */
+  const sub = sub_open()
+  const r = setopt(sub, NNG_OPT_SUB_SUBSCRIBE, topic)
 
-
-
-
-
-
-
-
-  function test(name){
-    return t.test(`${bar.slice(7)} ${name} ${bar.slice(7)}`,
-      require(`./${name}`))
-  }
-})
+  t.is(r, 0, 'sub socket configured subscription option succeeds')
+  t.is(close(sub), 0, 'closing the sub socket works')
+}

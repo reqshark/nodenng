@@ -221,6 +221,32 @@ NAN_METHOD(dial) {
   }
 }
 
+
+/**
+ * https://nanomsg.github.io/nng/man/tip/nng_setopt.3
+ *
+ * int nng_setopt(nng_socket s, const char *opt, const void *val, size_t valsz);
+ *
+ * used to configure options for the socket s
+ */
+
+NAN_METHOD(setopt) {
+  Utf8String opt(info[1]);
+
+  char *val = NULL;
+  if (info[2]->IsString()) {
+    Utf8String val(info[1]);
+  }
+
+  int sopt = nng_setopt(*UnwrapPointer<nng_socket*>(info[0]), *opt, val, 0);
+
+  if (sopt == 0) {
+    info.GetReturnValue().Set(New<Number>(sopt));
+  } else {
+    info.GetReturnValue().Set(New<String>(nng_strerror(sopt)).ToLocalChecked());
+  }
+}
+
 NAN_METHOD(test){
   printf("sleeping for 5\n");
   reqsleep(5);
@@ -232,6 +258,9 @@ NAN_METHOD(test){
 #define EXPORT_METHOD(C, S)                                                    \
   Set(C, New(#S).ToLocalChecked(),                                             \
     Nan::GetFunction(New<FunctionTemplate>(S)).ToLocalChecked());
+
+#define EXPORT_SYMBOL(C, S)                                                    \
+  Set(C, New(#S).ToLocalChecked(), New(S).ToLocalChecked());                   \
 
 NAN_MODULE_INIT(Init) {
   HandleScope scope;
@@ -256,7 +285,13 @@ NAN_MODULE_INIT(Init) {
   EXPORT_METHOD(target, listen);
   EXPORT_METHOD(target, dial);
 
+  /* setopt */
+  EXPORT_METHOD(target, setopt);
+
   /* debug */
   EXPORT_METHOD(target, test);
+
+  /* symbols */
+  EXPORT_SYMBOL(target, NNG_OPT_SUB_SUBSCRIBE);
 }
 NODE_MODULE(nodenng, Init)
