@@ -8,6 +8,13 @@ else
   git submodule update --init --recursive
 fi
 
+# macos
+# see: https://developer.apple.com/forums/thread/122762?answerId=382261022#382261022
+if [[ "$OSTYPE" == "darwin"* ]];
+then
+  export CFLAGS="-isysroot '$(xcrun --show-sdk-path)' $CFLAGS"
+fi
+
 mkdir -p build && cd build
 cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_MESSAGE=NEVER -DCMAKE_INSTALL_PREFIX=$(pwd)/../../deps .. -DNNG_TESTS=OFF -DNNG_TOOLS=OFF -DNNG_ENABLE_NNGCAT=OFF -DNNG_ENABLE_COVERAGE=OFF
 make MACOSX_DEPLOYMENT_TARGET=10.15 all install
