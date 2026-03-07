@@ -1,7 +1,10 @@
 #!/bin/bash
+# Fallback to nng branch "stable", if not set specifically.
+NNG_BRANCH=${NNG_BRANCH:-stable}
+
 if [ ! -d nng ]; then
   rm -rf deps nng build && mkdir deps
-  git clone --depth 1 https://github.com/nanomsg/nng && cd nng
+  git clone --depth 1 --branch "$NNG_BRANCH" https://github.com/nanomsg/nng && cd nng
 else
   cd nng
   git pull
@@ -16,5 +19,11 @@ then
 fi
 
 mkdir -p build && cd build
-cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_MESSAGE=NEVER -DCMAKE_INSTALL_PREFIX=$(pwd)/../../deps .. -DNNG_TESTS=OFF -DNNG_TOOLS=OFF -DNNG_ENABLE_NNGCAT=OFF -DNNG_ENABLE_COVERAGE=OFF
+cmake -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_MESSAGE=NEVER -DCMAKE_INSTALL_PREFIX=$(pwd)/../../deps .. \
+      -DNNG_TESTS=OFF \
+      -DNNG_TOOLS=OFF \
+      -DNNG_ENABLE_NNGCAT=OFF \
+      -DNNG_ENABLE_COVERAGE=OFF \
+      -DBUILD_SHARED_LIBS=OFF
+
 make MACOSX_DEPLOYMENT_TARGET=10.15 all install
