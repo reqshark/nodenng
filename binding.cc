@@ -203,6 +203,83 @@ NAN_METHOD(setopt) {
   }
 }
 
+NAN_METHOD(send_msg) {
+  if (info.Length() < 2) {
+    Nan::ThrowTypeError("Socket and message required");
+    return;
+  }
+
+  nng_socket *sock = UnwrapPointer<nng_socket*>(info[0]);
+
+  if (!node::Buffer::HasInstance(info[1])) {
+    Nan::ThrowTypeError("Argument must be a Buffer");
+    return;
+  }
+
+  char *data = node::Buffer::Data(info[1]);
+  size_t len = node::Buffer::Length(info[1]);
+
+  int rv = nng_send(*sock, data, len, 0);
+
+  if (rv == 0) {
+    info.GetReturnValue().Set(New<Number>(rv));
+  } else {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+  }
+}
+
+NAN_METHOD(recv_msg) {
+  if (info.Length() < 1) {
+    Nan::ThrowTypeError("Socket required");
+    return;
+  }
+
+  nng_socket *sock = UnwrapPointer<nng_socket*>(info[0]);
+
+#if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
+
+  nng_msg *msg = NULL;
+  int rv = nng_recvmsg(*sock, &msg, 0);
+
+  if (rv != 0) {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+    return;
+  }
+
+  void *buf = nng_msg_body(msg);
+  size_t size = nng_msg_len(msg);
+
+  Local<Object> out =
+    Nan::CopyBuffer((char*)buf, size).ToLocalChecked();
+
+  nng_msg_free(msg);
+#else
+
+  void *buf = NULL;
+  size_t size;
+
+  int rv = nng_recv(*sock, &buf, &size, NNG_FLAG_ALLOC);
+
+  if (rv != 0) {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+    return;
+  }
+
+  Local<Object> out =
+    Nan::CopyBuffer((char*)buf, size).ToLocalChecked();
+
+  nng_free(buf, size);
+#endif
+
+  info.GetReturnValue().Set(out);
+}
+
 NAN_METHOD(test){
   printf("sleeping for 5\n");
   reqsleep(5);
@@ -251,6 +328,10 @@ NAN_MODULE_INIT(Init) {
 
   /* setopt */
   EXPORT_METHOD(target, setopt);
+
+  /* send and recv */
+  EXPORT_METHOD(target, send_msg);
+  EXPORT_METHOD(target, recv_msg);
 
   /* debug */
   EXPORT_METHOD(target, test);
