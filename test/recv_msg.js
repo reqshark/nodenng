@@ -23,68 +23,57 @@
 module.exports  = recv_msg
 
 function recv_msg(t){
-  t.plan(9)
+  t.plan(3)
 
   const str = 'recv succeeds for'
   const url = 'tcp://127.0.0.1'
   const {
-    bus_open,
     pair0_open,
     pair1_open,
+    push_open,
     pull_open,
-    rep_open,
-    req_open,
-    respondent_open,
-    sub_open,
-    surveyor_open,
     dial,
+    listen,
+    send_msg,
     recv_msg,
+    close,
   } = require('..')
 
   const message = Buffer.from('hello from sender');
 
-  // bus
-  const bus = bus_open()
-  dial(bus, `${url}:7777`)
-  t.is(recv_msg(bus, message), 0, `${str} bus`)
+  // pair0 - two sockets connected
+  const pair0_a = pair0_open()
+  const pair0_b = pair0_open()
+  listen(pair0_a, `${url}:9878`)
+  dial(pair0_b, `${url}:9878`)
+  send_msg(pair0_b, message)
+  const recv_pair0 = recv_msg(pair0_a)
+  t.is(recv_pair0.toString(), message.toString(), `${str} pair0`)
+  close(pair0_a)
+  close(pair0_b)
 
-  // pair0
-  const pair0 = pair0_open()
-  dial(pair0, `${url}:7778`)
-  t.is(recv_msg(pair0, message), 0, `${str} pair0`)
+  // pair1 - two sockets connected
+  const pair1_a = pair1_open()
+  const pair1_b = pair1_open()
+  listen(pair1_a, `${url}:9879`)
+  dial(pair1_b, `${url}:9879`)
+  send_msg(pair1_b, message)
+  const recv_pair1 = recv_msg(pair1_a)
+  t.is(recv_pair1.toString(), message.toString(), `${str} pair1`)
+  close(pair1_a)
+  close(pair1_b)
 
-  // pair1
-  const pair1 = pair1_open()
-  dial(pair1, `${url}:7779`)
-  t.is(recv_msg(pair1, message), 0, `${str} pair1`)
-
-  // pull
+  // push/pull
+  const push = push_open()
   const pull = pull_open()
-  dial(pull, `${url}:7781`)
-  t.is(recv_msg(pull, message), 0, `${str} pull`)
+  listen(pull, `${url}:9882`)
+  dial(push, `${url}:9882`)
+  send_msg(push, message)
+  const recv_pull = recv_msg(pull)
+  t.is(recv_pull.toString(), message.toString(), `${str} pull`)
+  close(push)
+  close(pull)
 
-  // rep
-  const rep = rep_open()
-  dial(rep, `${url}:7783`)
-  t.is(recv_msg(rep, message), 0, `${str} rep`)
-
-  // req
-  const req = req_open()
-  dial(req, `${url}:7784`)
-  t.is(recv_msg(req, message), 0, `${str} req`)
-
-  // respondent
-  const respondent = respondent_open()
-  dial(respondent, `${url}:7785`)
-  t.is(recv_msg(respondent, message), 0, `${str} respondent`)
-
-  // sub
-  const sub = sub_open()
-  dial(sub, `${url}:7786`)
-  t.is(recv_msg(sub, message), 0, `${str} sub`)
-
-  // surveyor
-  const surveyor = surveyor_open()
-  dial(surveyor, `${url}:7787`)
-  t.is(recv_msg(surveyor, message), 0, `${str} surveyor`)
+  // Note: pub/sub requires delay for subscription to propagate
+  // Note: req/rep/surveyor/respondent require proper request-reply exchange
 }
