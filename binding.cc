@@ -39,7 +39,6 @@
 #include "timer.h"
 #include "nan.h"
 #include "ref.h"
-#include <cstring>
 
 #if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
 #define NODENNG_CLOSE(s) nng_socket_close(s)
