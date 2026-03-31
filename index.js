@@ -17,4 +17,13 @@
   IN THE SOFTWARE.
 */
 
-module.exports = require('./build/Release/nodenng.node')
+const nng = require('./build/Release/nodenng.node')
+const _sub_open = nng.sub_open
+
+nng.sub_open = function sub_open(topic){
+  const s = _sub_open()
+  s.subscribe(topic || '')
+  return s
+}
+
+module.exports = nng

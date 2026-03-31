@@ -39,18 +39,17 @@ function dial(t){
     respondent_open,
     sub_open,
     surveyor_open,
-    dial,
   } = require('..')
 
-  t.is(dial(bus_open(), `${url}:7777`), 0, `${str} bus`)
-  t.is(dial(pair0_open(), `${url}:7778`), 0, `${str} pair0`)
-  t.is(dial(pair1_open(), `${url}:7779`), 0, `${str} pair1`)
-  t.is(dial(pub_open(), `${url}:7780`), 0, `${str} pub`)
-  t.is(dial(pull_open(), `${url}:7781`), 0, `${str} pull`)
-  t.is(dial(push_open(), `${url}:7782`), 0, `${str} push`)
-  t.is(dial(rep_open(), `${url}:7783`), 0, `${str} rep`)
-  t.is(dial(req_open(), `${url}:7784`), 0, `${str} req`)
-  t.is(dial(respondent_open(), `${url}:7785`), 0, `${str} respondent`)
-  t.is(dial(sub_open(), `${url}:7786`), 0, `${str} sub`)
-  t.is(dial(surveyor_open(), `${url}:7787`), 0, `${str} surveyor`)
+  t.is(bus_open().dial(`${url}:7777`), 0, `${str} bus`)
+  t.is(pair0_open().dial(`${url}:7778`), 0, `${str} pair0`)
+  t.is(pair1_open().dial(`${url}:7779`), 0, `${str} pair1`)
+  t.is(pub_open().dial(`${url}:7780`), 0, `${str} pub`)
+  t.is(pull_open().dial(`${url}:7781`), 0, `${str} pull`)
+  t.is(push_open().dial(`${url}:7782`), 0, `${str} push`)
+  t.is(rep_open().dial(`${url}:7783`), 0, `${str} rep`)
+  t.is(req_open().dial(`${url}:7784`), 0, `${str} req`)
+  t.is(respondent_open().dial(`${url}:7785`), 0, `${str} respondent`)
+  t.is(sub_open().dial(`${url}:7786`), 0, `${str} sub`)
+  t.is(surveyor_open().dial(`${url}:7787`), 0, `${str} surveyor`)
 }
