@@ -23,23 +23,21 @@
 module.exports  = nng_setopt
 
 function nng_setopt(t){
-  t.plan(5)
+  t.plan(3)
 
   const {
-    NNG_OPT_RECVTIMEO,
+    NNG_OPT_SUB_SUBSCRIBE,
     sub_open,
-    req_open,
+    setopt,
+    close,
   } = require('..')
 
-  t.is(NNG_OPT_RECVTIMEO, `recv-timeout`, 'NNG_OPT_RECVTIMEO symbol export succeeds')
+  t.is(NNG_OPT_SUB_SUBSCRIBE, `sub:subscribe`, 'library symbol export succeeds')
 
-  /* subscribe */
+  const topic = '' /* subscription topic all */
   const sub = sub_open()
-  t.is(sub.subscribe(''), 0, 'sub socket subscribe succeeds')
-  t.is(sub.close(), 0, 'closing the sub socket works')
+  const r = setopt(sub, NNG_OPT_SUB_SUBSCRIBE, topic)
 
-  /* setopt/getopt */
-  const req = req_open()
-  t.is(req.setopt(NNG_OPT_RECVTIMEO, 1000), 0, 'setopt recv-timeout succeeds')
-  t.is(req.close(), 0, 'closing the req socket works')
+  t.is(r, 0, 'sub socket configured subscription option succeeds')
+  t.is(close(sub), 0, 'closing the sub socket works')
 }

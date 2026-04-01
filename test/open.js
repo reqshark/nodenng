@@ -25,6 +25,7 @@ module.exports  = open
 function open(t){
   t.plan(11)
 
+  const { isBuffer } = Buffer
   const {
     bus_open,
     pair0_open,
@@ -39,16 +40,16 @@ function open(t){
     surveyor_open,
   } = require('..')
 
-  t.is (typeof bus_open().id, 'number', 'open bus returns a socket with id')
-  t.is (typeof pair0_open().id, 'number', 'open pair0 returns a socket with id')
-  t.is (typeof pair1_open().id, 'number', 'open pair1 returns a socket with id')
-  t.is (typeof pub_open().id, 'number', 'open pub returns a socket with id')
-  t.is (typeof pull_open().id, 'number', 'open pull returns a socket with id')
-  t.is (typeof push_open().id, 'number', 'open push returns a socket with id')
-  t.is (typeof rep_open().id, 'number', 'open rep returns a socket with id')
-  t.is (typeof req_open().id, 'number', 'open req returns a socket with id')
-  t.is (typeof respondent_open().id, 'number', 'open respondent returns a socket with id')
-  t.is (typeof sub_open().id, 'number', 'open sub returns a socket with id')
-  t.is (typeof surveyor_open().id, 'number', 'open surveyor returns a socket with id')
+  t.ok ( isBuffer(bus_open()), 'open bus sock is a node buffer')
+  t.ok ( isBuffer(pair0_open()), 'open pair0 sock is a node buffer')
+  t.ok ( isBuffer(pair1_open()), 'open pair1 sock is a node buffer')
+  t.ok ( isBuffer(pub_open()), 'open pub sock is a node buffer')
+  t.ok ( isBuffer(pull_open()), 'open pull sock is a node buffer')
+  t.ok ( isBuffer(push_open()), 'open push sock is a node buffer')
+  t.ok ( isBuffer(rep_open()), 'open rep sock is a node buffer')
+  t.ok ( isBuffer(req_open()), 'open req sock is a node buffer')
+  t.ok ( isBuffer(respondent_open()), 'open respondent sock is a node buffer')
+  t.ok ( isBuffer(sub_open()), 'open sub sock is a node buffer')
+  t.ok ( isBuffer(surveyor_open()), 'open surveyor sock is a node buffer')
 
 }
