@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       #- restore_cache:
-      - run: sudo apt install cmake build-essential libmbedtls-dev
+      - run: sudo apt install cmake build-essential libmbedtls-dev jq
       - run: npm i
       - run: npm t
 

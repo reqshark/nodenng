@@ -1,7 +1,8 @@
 #!/bin/bash
 if [ ! -d nng ]; then
   rm -rf deps nng build && mkdir deps
-  git clone --depth 1 https://github.com/nanomsg/nng && cd nng
+  LATEST_TAG=$(curl --silent "https://api.github.com/repos/nanomsg/nng/releases/latest" | jq -r .tag_name)
+  git clone --depth 1 https://github.com/nanomsg/nng --branch "$LATEST_TAG" --single-branch && cd nng
 else
   cd nng
   git pull
