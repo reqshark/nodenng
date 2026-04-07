@@ -21,6 +21,8 @@
 */
 
 #include <nng/nng.h>
+
+#if !defined(NNG_MAJOR_VERSION) || (NNG_MAJOR_VERSION < 2)
 #include <nng/protocol/bus0/bus.h>
 #include <nng/protocol/pair0/pair.h>
 #include <nng/protocol/pair1/pair.h>
@@ -32,10 +34,19 @@
 #include <nng/protocol/survey0/respond.h>
 #include <nng/protocol/pubsub0/sub.h>
 #include <nng/protocol/survey0/survey.h>
+#endif
 
 #include "timer.h"
 #include "nan.h"
 #include "ref.h"
+
+#if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
+#define NODENNG_CLOSE(s) nng_socket_close(s)
+#define NODENNG_STRERROR(e) nng_strerror(static_cast<nng_err>(e))
+#else
+#define NODENNG_CLOSE(s) nng_close(s)
+#define NODENNG_STRERROR(e) nng_strerror(e)
+#endif
 
 using v8::FunctionTemplate;
 using v8::Function;
@@ -56,118 +67,31 @@ using Nan::Set;
 using Nan::New;
 using Nan::To;
 
-NAN_METHOD(bus_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_bus0_open(&s); //nng_bus0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
+#define DEFINE_OPENER(name, func) \
+NAN_METHOD(name) { \
+  size_t sz = sizeof(nng_socket); \
+  nng_socket s = {}; \
+  int rv = func(&s); \
+  if (rv != 0) { \
+    Nan::ThrowError(NODENNG_STRERROR(rv)); \
+    return; \
+  } \
+  Local<Object> sock = NewBuffer(sz).ToLocalChecked(); \
+  memcpy(node::Buffer::Data(sock), &s, sz); \
+  info.GetReturnValue().Set(sock); \
 }
 
-NAN_METHOD(pair0_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_pair0_open(&s); //nng_pair0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-//NNG_OPT_PAIR1_POLY
-//NNG_OPT_MAXTTL
-NAN_METHOD(pair1_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_pair1_open(&s); //nng_pair1_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(pub_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_pub0_open(&s); //nng_pub0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(pull_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_pull0_open(&s); //nng_pull0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(push_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_push0_open(&s); //nng_push0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(rep_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_rep0_open(&s); //nng_rep0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(req_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_req0_open(&s); //nng_req0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(respondent_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_respondent0_open(&s); //nng_respondent0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(sub_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_sub0_open(&s); //nng_sub0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
-NAN_METHOD(surveyor_open) {
-  size_t sz = sizeof (nng_socket);
-  nng_socket s;
-  nng_surveyor0_open(&s); // nng_surveyor0_open_raw
-
-  Local<Object> sock = NewBuffer(sz).ToLocalChecked();
-  memcpy(node::Buffer::Data(sock), &s, sz);
-  info.GetReturnValue().Set(sock);
-}
-
+DEFINE_OPENER(bus_open, nng_bus0_open)
+DEFINE_OPENER(pair0_open, nng_pair0_open)
+DEFINE_OPENER(pair1_open, nng_pair1_open)
+DEFINE_OPENER(pub_open, nng_pub0_open)
+DEFINE_OPENER(sub_open, nng_sub0_open)
+DEFINE_OPENER(pull_open, nng_pull0_open)
+DEFINE_OPENER(push_open, nng_push0_open)
+DEFINE_OPENER(req_open, nng_req0_open)
+DEFINE_OPENER(rep_open, nng_rep0_open)
+DEFINE_OPENER(surveyor_open, nng_surveyor0_open)
+DEFINE_OPENER(respondent_open, nng_respondent0_open)
 
 /**
  * nanomsg.github.io/nng/man/tip/nng_close.3
@@ -179,16 +103,26 @@ NAN_METHOD(surveyor_open) {
  */
 
 NAN_METHOD(close) {
-  int clsd = nng_close(*UnwrapPointer<nng_socket*>(info[0]));
+  if (info.Length() < 1) {
+    Nan::ThrowTypeError("Socket required");
+    return;
+  }
+
+  int clsd = NODENNG_CLOSE(*UnwrapPointer<nng_socket*>(info[0]));
   if (clsd == 0) {
     info.GetReturnValue().Set(New<Number>(clsd));
   } else {
-    info.GetReturnValue().Set(New<String>(nng_strerror(clsd)).ToLocalChecked());
+    info.GetReturnValue().Set(New<String>(NODENNG_STRERROR(clsd)).ToLocalChecked());
   }
 }
 
 //int nng_listen(nng_socket s, const char *url, nng_listener *lp, int flags);
 NAN_METHOD(listen) {
+  if (info.Length() < 2) {
+    Nan::ThrowTypeError("Socket and URL required");
+    return;
+  }
+
   Utf8String url(info[1]);
 
   // do we want to return the nng_listener??
@@ -202,12 +136,17 @@ NAN_METHOD(listen) {
   } else {
     info
       .GetReturnValue()
-      .Set(New<String>(nng_strerror(l)).ToLocalChecked());
+      .Set(New<String>(NODENNG_STRERROR(l)).ToLocalChecked());
   }
 }
 
 //int nng_dial(nng_socket s, const char *url, nng_dialer *dp, int flags);
 NAN_METHOD(dial) {
+  if (info.Length() < 2) {
+    Nan::ThrowTypeError("Socket and URL required");
+    return;
+  }
+
   Utf8String url(info[1]);
 
   // do we want to return the nng_dialer?
@@ -217,7 +156,7 @@ NAN_METHOD(dial) {
   if (d == 0) {
     info.GetReturnValue().Set(New<Number>(d)); // <-- good spot for nng_dialer
   } else {
-    info.GetReturnValue().Set(New<String>(nng_strerror(d)).ToLocalChecked());
+    info.GetReturnValue().Set(New<String>(NODENNG_STRERROR(d)).ToLocalChecked());
   }
 }
 
@@ -231,20 +170,113 @@ NAN_METHOD(dial) {
  */
 
 NAN_METHOD(setopt) {
-  Utf8String opt(info[1]);
-
-  char *val = NULL;
-  if (info[2]->IsString()) {
-    Utf8String val(info[1]);
+  if (info.Length() < 3) {
+    Nan::ThrowTypeError("Socket, option, and value required");
+    return;
   }
 
-  int sopt = nng_setopt(*UnwrapPointer<nng_socket*>(info[0]), *opt, val, 0);
+  Utf8String opt(info[1]);
+  Utf8String val(info[2]);
+  int sopt;
+
+#if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
+  sopt = NNG_ENOTSUP;
+  if (strcmp(*opt, "sub:subscribe") == 0) {
+    sopt = nng_sub0_socket_subscribe(
+      *UnwrapPointer<nng_socket*>(info[0]),
+      *val,
+      strlen(*val));
+  }
+#else
+  sopt = nng_setopt(
+    *UnwrapPointer<nng_socket*>(info[0]),
+    *opt,
+    *val,
+    strlen(*val));
+#endif
 
   if (sopt == 0) {
     info.GetReturnValue().Set(New<Number>(sopt));
   } else {
-    info.GetReturnValue().Set(New<String>(nng_strerror(sopt)).ToLocalChecked());
+    info.GetReturnValue().Set(New<String>(NODENNG_STRERROR(sopt)).ToLocalChecked());
   }
+}
+
+NAN_METHOD(send_msg) {
+  if (info.Length() < 2) {
+    Nan::ThrowTypeError("Socket and message required");
+    return;
+  }
+
+  nng_socket *sock = UnwrapPointer<nng_socket*>(info[0]);
+
+  if (!node::Buffer::HasInstance(info[1])) {
+    Nan::ThrowTypeError("Argument must be a Buffer");
+    return;
+  }
+
+  char *data = node::Buffer::Data(info[1]);
+  size_t len = node::Buffer::Length(info[1]);
+
+  int rv = nng_send(*sock, data, len, 0);
+
+  if (rv == 0) {
+    info.GetReturnValue().Set(New<Number>(rv));
+  } else {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+  }
+}
+
+NAN_METHOD(recv_msg) {
+  if (info.Length() < 1) {
+    Nan::ThrowTypeError("Socket required");
+    return;
+  }
+
+  nng_socket *sock = UnwrapPointer<nng_socket*>(info[0]);
+
+#if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
+
+  nng_msg *msg = NULL;
+  int rv = nng_recvmsg(*sock, &msg, 0);
+
+  if (rv != 0) {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+    return;
+  }
+
+  void *buf = nng_msg_body(msg);
+  size_t size = nng_msg_len(msg);
+
+  Local<Object> out =
+    Nan::CopyBuffer((char*)buf, size).ToLocalChecked();
+
+  nng_msg_free(msg);
+#else
+
+  void *buf = NULL;
+  size_t size;
+
+  int rv = nng_recv(*sock, &buf, &size, NNG_FLAG_ALLOC);
+
+  if (rv != 0) {
+    info.GetReturnValue().Set(
+      New<String>(NODENNG_STRERROR(rv)).ToLocalChecked()
+    );
+    return;
+  }
+
+  Local<Object> out =
+    Nan::CopyBuffer((char*)buf, size).ToLocalChecked();
+
+  nng_free(buf, size);
+#endif
+
+  info.GetReturnValue().Set(out);
 }
 
 NAN_METHOD(test){
@@ -264,6 +296,14 @@ NAN_METHOD(test){
 
 NAN_MODULE_INIT(Init) {
   HandleScope scope;
+
+#if defined(NNG_MAJOR_VERSION) && (NNG_MAJOR_VERSION >= 2)
+  nng_err init_rv = nng_init(NULL);
+  if (init_rv != 0) {
+    Nan::ThrowError(NODENNG_STRERROR(init_rv));
+    return;
+  }
+#endif
 
   /* open */
   EXPORT_METHOD(target, bus_open);
@@ -288,10 +328,29 @@ NAN_MODULE_INIT(Init) {
   /* setopt */
   EXPORT_METHOD(target, setopt);
 
+  /* send and recv */
+  EXPORT_METHOD(target, send_msg);
+  EXPORT_METHOD(target, recv_msg);
+
   /* debug */
   EXPORT_METHOD(target, test);
 
   /* symbols */
+#if defined(NNG_OPT_SUB_SUBSCRIBE)
   EXPORT_SYMBOL(target, NNG_OPT_SUB_SUBSCRIBE);
+#else
+  Set(
+    target,
+    New("NNG_OPT_SUB_SUBSCRIBE").ToLocalChecked(),
+    New("sub:subscribe").ToLocalChecked());
+#endif
+#if defined(NNG_OPT_SUB_UNSUBSCRIBE)
+  EXPORT_SYMBOL(target, NNG_OPT_SUB_UNSUBSCRIBE);
+#else
+  Set(
+    target,
+    New("NNG_OPT_SUB_UNSUBSCRIBE").ToLocalChecked(),
+    New("sub:unsubscribe").ToLocalChecked());
+#endif
 }
 NODE_MODULE(nodenng, Init)

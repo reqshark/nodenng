@@ -35,8 +35,8 @@ require ('tape')(`${bar} nng testsuite summary ${bar}`, function tests (t){
   test('listen')
   test('dial')
   test('setopt')
-
-
+  test('send_msg')
+  test('recv_msg')
 
 
 
